@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block tittle %}  HomePage {% endblock %}
+
+{% block content %}
+    <h3>All reviews</h3>
+    {% for review in page_obj %}
+
+        <div class="container posts-content">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                      <div class="card-body">
+                        <div class="media mb-3">
+                          <img src="{{ review.users.profile_picture.url }}"
+                               class="d-block ui-w-40 rounded-circle" alt="">
+                          <div class="media-body ml-3">
+                           <b> {{ review.user.username }} </b> rated this book {{ review.stars_given }} stars
+                            <div class="text-muted small">{{ review.created_at | date:"M d, Y" }}</div>
+                          </div>
+                        </div>
+
+                        <p>
+                            {{ review.comment | truncatechars:100}}
+                        </p>
+                          <img class="cover-pic center" src="{{ review.book.cover_picture.url }}">
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+    
+    <nav aria-label="...">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    
+{% endblock %}
